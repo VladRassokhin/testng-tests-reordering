@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+<suite name="Check Before/After" verbose="1">
+    <listeners>
+        <listener class-name="order.MyMethodInterceptor"/>
+    </listeners>
+    <test name="Check Before/After">
+        <classes>
+            <class name="tests.Test1"/>
+            <class name="tests.Test2"/>
+        </classes>
+    </test>
+</suite>
