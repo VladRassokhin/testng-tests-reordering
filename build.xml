@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="testng-tests-reordering" default="all">
+
+    <property file="build.properties"/>
+
+    <!-- Compiler options -->
+
+    <property name="compiler.debug" value="on"/>
+    <property name="compiler.generate.no.warnings" value="off"/>
+    <property name="compiler.args" value=""/>
+    <property name="compiler.max.memory" value="128m"/>
+    <patternset id="ignored.files">
+        <exclude name="**/CVS/**"/>
+        <exclude name="**/SCCS/**"/>
+        <exclude name="**/RCS/**"/>
+        <exclude name="**/rcs/**"/>
+        <exclude name="**/.DS_Store/**"/>
+        <exclude name="**/.svn/**"/>
+        <exclude name="**/.pyc/**"/>
+        <exclude name="**/.pyo/**"/>
+        <exclude name="**/*.pyc/**"/>
+        <exclude name="**/*.pyo/**"/>
+        <exclude name="**/.git/**"/>
+        <exclude name="**/*.hprof/**"/>
+        <exclude name="**/_svn/**"/>
+        <exclude name="**/.hg/**"/>
+        <exclude name="**/*.lib/**"/>
+        <exclude name="**/*~/**"/>
+        <exclude name="**/__pycache__/**"/>
+        <exclude name="**/.bundle/**"/>
+        <exclude name="**/*.rbc/**"/>
+        <exclude name="**/vssver.scc/**"/>
+        <exclude name="**/vssver2.scc/**"/>
+    </patternset>
+    <patternset id="compiler.excluded">
+        <exclude name="${basedir}/target/generated-test-sources/test-annotations/**"/>
+    </patternset>
+    <patternset id="library.patterns">
+        <include name="*.war"/>
+        <include name="*.ear"/>
+        <include name="*.apk"/>
+        <include name="*.zip"/>
+        <include name="*.swc"/>
+        <include name="*.ane"/>
+        <include name="*.egg"/>
+        <include name="*.jar"/>
+    </patternset>
+    <patternset id="compiler.resources">
+        <exclude name="**/?*.java"/>
+        <exclude name="**/?*.form"/>
+        <exclude name="**/?*.class"/>
+        <exclude name="**/?*.groovy"/>
+        <exclude name="**/?*.scala"/>
+        <exclude name="**/?*.flex"/>
+        <exclude name="**/?*.kt"/>
+        <exclude name="**/?*.clj"/>
+    </patternset>
+
+
+    <!-- Project Libraries -->
+
+    <path id="library.all.classpath">
+        <pathelement location="${lib.dir}/jcommander-1.27.jar"/>
+        <pathelement location="${lib.dir}/bsh-2.0b4.jar"/>
+        <pathelement location="${lib.dir}/testng-6.8.jar"/>
+        <pathelement location="${lib.dir}/snakeyaml-1.6.jar"/>
+    </path>
+
+    <!-- Module testng-tests-reordering -->
+
+    <property name="testng-tests-reordering.testoutput.dir" value="${basedir}/target/test-classes"/>
+
+    <path id="testng-tests-reordering.module.classpath">
+        <path refid="library.all.classpath"/>
+    </path>
+
+    <path id="testng-tests-reordering.runtime.module.classpath">
+        <pathelement location="${testng-tests-reordering.testoutput.dir}"/>
+        <path refid="library.all.classpath"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.testng-tests-reordering">
+        <patternset refid="ignored.files"/>
+    </patternset>
+
+    <patternset id="excluded.from.compilation.testng-tests-reordering">
+        <patternset refid="compiler.excluded"/>
+        <patternset refid="excluded.from.module.testng-tests-reordering"/>
+    </patternset>
+
+    <path id="testng-tests-reordering.module.test.sourcepath">
+        <dirset dir="${basedir}">
+            <include name="src/test/java"/>
+        </dirset>
+    </path>
+
+
+    <target name="compile.module.testng-tests-reordering" depends="compile.module.testng-tests-reordering.tests" description="Compile module testng-tests-reordering"/>
+
+    <target name="compile.module.testng-tests-reordering.tests" description="compile module testng-tests-reordering; test classes">
+        <mkdir dir="${testng-tests-reordering.testoutput.dir}"/>
+        <javac destdir="${testng-tests-reordering.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+            <compilerarg line="${compiler.args}"/>
+            <classpath refid="testng-tests-reordering.module.classpath"/>
+            <src refid="testng-tests-reordering.module.test.sourcepath"/>
+            <patternset refid="excluded.from.compilation.testng-tests-reordering"/>
+        </javac>
+
+        <copy todir="${testng-tests-reordering.testoutput.dir}">
+            <fileset dir="${basedir}/src/test/java">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+                <patternset refid="excluded.from.compilation.testng-tests-reordering"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean.module.testng-tests-reordering" description="cleanup module">
+        <delete dir="${basedir}/target"/>
+    </target>
+
+    <target name="init" description="Build initialization">
+        <!-- Perform any build initialization in this target -->
+    </target>
+
+    <target name="clean" depends="clean.module.testng-tests-reordering" description="cleanup all"/>
+
+    <target name="build.modules" depends="init, clean, compile.module.testng-tests-reordering" description="build all modules"/>
+
+    <target name="all" depends="build.modules, test" description="build all &amp; test"/>
+
+    <target name="testng-init">
+        <taskdef name="testng" classname="org.testng.TestNGAntTask" classpathref="library.all.classpath"/>
+    </target>
+
+    <target name="test" depends="build.modules, testng-init">
+        <testng classpathref="testng-tests-reordering.runtime.module.classpath" outputdir="${basedir}/target/report">
+            <xmlfileset file="${basedir}/src/test/resources/testng.xml"/>
+        </testng>
+    </target>
+</project>

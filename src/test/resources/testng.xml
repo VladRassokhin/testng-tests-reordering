@@ -3,7 +3,7 @@
     <listeners>
         <listener class-name="order.MyMethodInterceptor"/>
     </listeners>
-    <test name="Check Before/After" preserve-order="false">
+    <test name="Check Before/After">
         <classes>
             <class name="tests.Test1"/>
             <class name="tests.Test2"/>
